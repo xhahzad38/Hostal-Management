@@ -1,0 +1,130 @@
+﻿@model AssignRoomViewModal
+
+@{
+    ViewBag.Title = "AssignRoom";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Assign Member Room</h3>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<div class="row">
+    <div class="form-horizontal col-sm-8">
+        <div class="form-group">
+            <label>Room</label><br />
+            <div class="col-md-10">
+                <select id="rooms" class="form-control" onchange="getRoomInfo()">
+                    <option value="0">Select</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Member</label><br />
+            <div class="col-md-10">
+                <select id="members" class="form-control">
+                    <option value="0">Select</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button id="assign" class="btn btn-primary">Assign</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 text-danger">
+        <h3><span id="roomInfo"></span></h3>
+    </div>
+
+    <script>
+        $(document).on('change', '#rooms', function () {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    console.log(xmlhttp.responseText)
+                    document.getElementById("roomInfo").innerHTML = xmlhttp.responseText;
+                }
+            };
+            xmlhttp.open("GET", "/Room/RoomInfo/" + $('#rooms').val(), true); //true=Asynchronous Request
+            xmlhttp.send();
+        });
+
+        $(document).ready(function () {
+
+            $.ajax({
+                type: "get",
+                url: "../Admin/GetMembers",
+                contentType: "application/json;charset=utf-8",
+                success: (response) => {
+                    console.log(response);
+
+                    for (let i = 0; i < response.length; i++) {
+                        $('#members').append('<option value="' + response[i].MemberId + '">' + response[i].MemberName + '</option>');
+                    }
+                },
+                error: () => {
+
+                }
+            });
+
+            $.ajax({
+                type: "get",
+                url: "../Member/GetRooms",
+                contentType: "application/json;charset=utf-8",
+                success: (response) => {
+                    console.log(response);
+
+                    for (let i = 0; i < response.length; i++) {
+                        $('#rooms').append('<option value="' + response[i].RoomId + '">' + response[i].RoomNo + '</option>');
+                    }
+                },
+                error: () => {
+
+                }
+            });
+
+
+            $(document).on("click", "#assign", function () {
+
+                if ($('#rooms').val() === '0' || $('#rooms').val() === undefined) {
+                    $('#rooms').focus();
+                    return;
+                }
+                else
+                    if ($('#members').val() === '0' || $('#members').val() === undefined) {
+                        $('#members').focus();
+                        return;
+                    }
+
+                var data = {
+                    roomId: parseInt($('#rooms').val()),
+                    memberId: parseInt($('#members').val())
+                };
+
+                console.log(data);
+                $.ajax({
+                    url: "../Member/AssignRoom",
+                    type: "post",
+                    contentType: "application/json",
+                    async: false,
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        window.location.replace("http://localhost:58949/Member/");
+                    },
+                    error: function (error) { }
+                });
+            });
+        });
+    </script>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+

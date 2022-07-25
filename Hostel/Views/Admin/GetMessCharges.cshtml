@@ -1,0 +1,38 @@
+﻿@model IEnumerable<MessCharges>
+
+@{
+    ViewBag.Title = "GetMessCharges";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Mess Charges</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Member.MemberName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Charges)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateAdded)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Member.MemberName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Charges)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateAdded)
+        </td>
+    </tr>
+}
+
+</table>

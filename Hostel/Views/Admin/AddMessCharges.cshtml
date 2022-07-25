@@ -1,0 +1,106 @@
+﻿@model MessChargesViewModel 
+@{
+    ViewBag.Title = "AddMessCharges";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Add Mess Charges</h3>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<div class="row">
+
+    <div class="form-horizontal col-sm-8">
+
+        <div class="form-group">
+            <label>Charges</label><br />
+            <div class="col-md-10">
+                <input id="charges" type="number" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Member</label><br />
+            <div class="col-md-10">
+            <select id="members" class="form-control">
+                <option value="0">Select</option>
+            </select>
+            </div>
+        </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button class="btn btn-primary" id="saveCharges">Save</button>
+        </div>
+    </div>
+    </div>
+    <div class="col-sm-4 text-danger">
+        <h3><span id="roomInfo"></span></h3>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+            $.ajax({
+                type: "get",
+                url: "../Admin/GetMembers",
+                contentType: "application/json",
+                success: (response) => {
+                    console.log(response);
+
+                    for (let i = 0; i < response.length; i++) {
+                        $('#members').append('<option value="' + response[i].MemberId + '">' + response[i].MemberName + '</option>');
+                    }
+                },
+                error: () => {
+
+                }
+            });
+
+
+            $(document).on("click", "#saveCharges", function () {
+                
+                if ($('#charges').val() === '' || $('#charges').val() === undefined) {
+                    console.log($('#charges').val());
+                    $('#charges').focus();
+                    return;
+                }
+                else
+                if ($('#members').val() === '0' || $('#members').val() === undefined) {
+                    console.log('member called')
+                    $('#members').focus();
+                    return;
+                }
+
+                var data = {
+                    charges: $('#charges').val(),
+                    memberId: $('#members').val()
+                };
+
+                $.ajax({
+                    url: "../Admin/AddMessCharges",
+                    type: "post",
+                    contentType: "application/json",
+                    async:false,
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        window.location.replace("http://localhost:58949/Admin/GetMessCharges");
+                    },
+                    error: function (error) { }
+                });
+
+                //$.ajax({
+                //    url: "../Admin/AddMessCharges",
+                //    type: "post",
+                //    data: JSON.stringify(data),
+                //    contentType: "application/json",
+                //    async: false,
+                //    success: function (response) { },
+                //    error: function (error) {}
+                //});
+            });
+        });
+    </script>
+</div>
+

@@ -1,0 +1,87 @@
+﻿@model MessDishes
+@{
+    ViewBag.Title = "Add Mess Dishes";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Add Mess Dishes</h3>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<div class="row">
+
+    <div class="form-horizontal col-sm-8">
+
+        <div class="form-group">
+            <label>Dish Name</label><br />
+            <div class="col-md-10">
+                <input id="dishName" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Price</label><br />
+            <div class="col-md-10">
+                <input type="number" id="price" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button class="btn btn-primary" id="saveCharges">Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 text-danger">
+        <h3><span id="roomInfo"></span></h3>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+            $(document).on("click", "#saveCharges", function () {
+
+                if ($('#dishName').val() === '' || $('#dishName').val() === undefined) {
+                    console.log($('#dishName').val());
+                    $('#dishName').focus();
+                    return;
+                }
+                else
+                    if ($('#price').val() === '' || $('#price').val() === undefined) {
+                        console.log('member called')
+                        $('#price').focus();
+                        return;
+                    }
+
+                var data = {
+                    dishName: $('#dishName').val(),
+                    price: $('#price').val()
+                };
+
+                $.ajax({
+                    url: "../Admin/AddMessDishes",
+                    type: "post",
+                    contentType: "application/json",
+                    async: false,
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        window.location.replace("http://localhost:58949/Admin/MessDishesIndex");
+                    },
+                    error: function (error) { }
+                });
+
+                //$.ajax({
+                //    url: "../Admin/AddMessCharges",
+                //    type: "post",
+                //    data: JSON.stringify(data),
+                //    contentType: "application/json",
+                //    async: false,
+                //    success: function (response) { },
+                //    error: function (error) {}
+                //});
+            });
+        });
+    </script>
+</div>
+

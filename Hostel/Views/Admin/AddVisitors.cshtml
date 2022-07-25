@@ -1,0 +1,109 @@
+﻿@model MessDishes
+@{
+    ViewBag.Title = "Add Visitors";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">Add Mess Dishes</h3>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<div class="row">
+
+    <div class="form-horizontal col-sm-8">
+
+        <div class="form-group">
+            <label>Visitor Name</label><br />
+            <div class="col-md-10">
+                <input id="visitorName" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Visitor CNIC</label><br />
+            <div class="col-md-10">
+                <input id="visitorCNIC" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Visitor Card No</label><br />
+            <div class="col-md-10">
+                <input id="visitorCardNo" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Student Name</label><br />
+            <div class="col-md-10">
+                <input id="studentName" type="text" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button class="btn btn-primary" id="saveCharges">Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 text-danger">
+        <h3><span id="roomInfo"></span></h3>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+            $(document).on("click", "#saveCharges", function () {
+
+                if ($('#visitorName').val() === '' || $('#visitorName').val() === undefined) {
+                    console.log($('#visitorName').val());
+                    $('#visitorName').focus();
+                    return;
+                }
+                else if ($('#visitorCardNo').val() === '' || $('#visitorCardNo').val() === undefined) {
+                    console.log($('#visitorCardNo').val());
+                    $('#visitorCardNo').focus();
+                    return;
+                }
+                else if ($('#visitorCNIC').val() === '' || $('#visitorCNIC').val() === undefined) {
+                    console.log($('#visitorCNIC').val());
+                    $('#visitorCNIC').focus();
+                    return;
+                }
+                else if ($('#studentName').val() === '' || $('#studentName').val() === undefined) {
+                    console.log($('#studentName').val());
+                    $('#studentName').focus();
+                    return;
+                }
+
+                var data = {
+                    visitorName: $('#visitorName').val(),
+                    visitorCardNo: $('#visitorCardNo').val(),
+                    visitorCNIC: $('#visitorCNIC').val(),
+                    studentName: $('#studentName').val()
+                };
+
+                $.ajax({
+                    url: "../Admin/AddVisitors",
+                    type: "post",
+                    contentType: "application/json",
+                    async: false,
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        window.location.replace("http://localhost:58949/Admin/VisitorIndex");
+                    },
+                    error: function (error) { }
+                });
+
+                //$.ajax({
+                //    url: "../Admin/AddMessCharges",
+                //    type: "post",
+                //    data: JSON.stringify(data),
+                //    contentType: "application/json",
+                //    async: false,
+                //    success: function (response) { },
+                //    error: function (error) {}
+                //});
+            });
+        });
+    </script>
+</div>
+
